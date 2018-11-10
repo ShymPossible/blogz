@@ -1,0 +1,26 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<h1>Add New Entry!</h1>
+
+    <form method='post'>
+        <label>
+
+            New Post:
+
+            <input type="text" name="new_entry_title" value="{{new_entry_title}}">
+            {% if title_error %}
+                <span>{{title_error}}</span>
+            {% endif %}
+
+            <input type="hidden" name="entry-id" />
+            <input type="text" name='new_entry_text' value="{{new_entry_text}}"/>
+            {% if entry_error %}
+                <span>{{entry_error}}</span>
+            {% endif %}
+        </label>
+            <input type="submit" value='Add Entry' />
+    </form>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+    {% if entries|length == 0 %}
+    <p>No entries yet.</p>
+
+    {% else %}
+
+        {% for entry in entries %}
+        <h3>{{entry.name}}</h3>
+            <hr/>
+        <p>{{entry.content}}</p>
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
