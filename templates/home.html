@@ -8,7 +8,7 @@
     {% else %}
 
         {% for entry in entries %}
-        <h3>{{entry.name}}</h3>
+        <a href="/single?id={{entry.id}}" name="entry_title">{{entry.name}}</a>
             <hr/>
         <p>{{entry.content}}</p>
         {% endfor %}

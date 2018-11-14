@@ -22,7 +22,8 @@ class Entry(db.Model):
 
 @app.route('/new_entry', methods=['GET'])
 def index():
-    return render_template('new.html')
+
+    return render_template('/new.html')
 
 @app.route('/new_entry', methods=['POST'])
 def index_2():
@@ -43,23 +44,34 @@ def index_2():
 
         return render_template('new.html', new_entry_title=new_entry_title,new_entry_text=new_entry_text, entry_error=entry_error, title_error=title_error)
 
-    entry = Entry(new_entry_title, new_entry_text)
+    new_entry = Entry(new_entry_title, new_entry_text)
     
-    db.session.add(entry)
+    db.session.add(new_entry)
     db.session.commit()
 
-    return redirect('/')
+
+    return redirect('/single?id={}'.format(new_entry.id))
+     
     
+@app.route('/single', methods=['GET'])
+def single_entry():
 
+    entry = int(request.args.get('id'))
 
+    entry_id = Entry.query.filter_by(id=entry).first()
+
+    return render_template('single.html', entry_title=entry_id.name, entry_content=entry_id.content,
+    entry_id=entry_id)
 
 @app.route('/', methods=['POST', 'GET'])
 def entries():
 
     if request.method == 'GET':
         entries = Entry.query.all()
+        return render_template('home.html', entries=entries)
 
-    return render_template('home.html', entries=entries)
+    if request.method == 'POST':
+        return redirect("/single")
 
 
 if __name__ == '__main__':
