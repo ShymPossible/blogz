@@ -11,6 +11,7 @@
         <a href="/single?id={{entry.id}}" name="entry_title">{{entry.name}}</a>
             <hr/>
         <p>{{entry.content}}</p>
+        <p>written by <a href=''>{{entry.owner.username}}</a></p>
         {% endfor %}
 
     {% endif %}
