@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-<ul>
+
+{% block content %}
+<p>written by <a href='/user?id={{owner.username}}'>{{owner.username}}</a></p>
+
 {% for entry in entries %}
-    <li>
-        <h3>{{entry.name}}</h3>
+    <h3>{{entry_name}}</h3>
     <hr>
-        <p>{{entry.content}}</p>
-    </li>
+    <p>{{entry_content}}</p>
 {% endfor %}
-</ul>
+
 
 {% endblock %}

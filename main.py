@@ -73,9 +73,24 @@ def single_entry():
     entry = int(request.args.get('id'))
 
     entry_id = Entry.query.filter_by(id=entry).first()
+    entry_owner = entry_id.owner.username
+    owner_id = entry_id.owner.id
 
     return render_template('single.html', entry_title=entry_id.name, entry_content=entry_id.content,
-    entry_id=entry_id)
+    entry_id=entry_id, entry_owner=entry_owner, owner_id=owner_id)
+
+@app.route('/user', methods=['GET'])
+def user():
+
+    #if request.method == 'GET':
+    
+    entry = int(request.args.get('id'))
+    owner = User.query.filter_by(id=entry).first()
+    owner_2 = Entry.query.filter_by(id=entry).first()
+    #owner_2 = owner.blogz
+    entries = Entry.query.filter_by(owner_id=entry).all()
+
+    return render_template('user.html',entries=entries, owner=owner,entry_name=owner_2.name, entry_content=owner_2.content)
 
 @app.route('/', methods=['POST', 'GET'])
 def entries():
@@ -84,18 +99,6 @@ def entries():
 
         entries = Entry.query.all()
         return render_template('home.html', entries=entries)
-        
-        #having trouble rendering all below..
-
-        #entry = request.args.get('id')
-
-        #entry_id = Entry.query.filter_by(id=entry).first()
-
-        #user = request.args.get('username')
-        #username = User.query.filter_by(username=user).first()
-
-        #return render_template('home.html', entry_title=entry.n, entry_content=entry_id.content,
-        #entry_id=entry_id, username=username.username)
 
     if request.method == 'POST':
         return redirect("/single")
@@ -155,10 +158,9 @@ def require_login():
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
-@app.route('/index', methods=['GET','POST'])
+@app.route('/index', methods=['GET'])
 def index():
 
-    #username = User.username
     users = User.query.all()
     return render_template('index.html',users=users)
 
