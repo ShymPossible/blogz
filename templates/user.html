@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>written by <a href='/user?id={{owner.username}}'>{{owner.username}}</a></p>
+<p>written by <a href='/user?id={{owner.id}}'>{{owner.username}}</a></p>
 
 {% for entry in entries %}
-    <h3>{{entry_name}}</h3>
+    <h3><a href='/single?id={{entry.id}}'>{{entry.name}}</a></h3>
     <hr>
-    <p>{{entry_content}}</p>
+    <p>{{entry.content}}</p>
 {% endfor %}
 
 

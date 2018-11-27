@@ -31,7 +31,12 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+@app.before_request
+def require_login():
 
+    allowed_routes = ['login', 'register', 'index','entries']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
 
 @app.route('/new_entry', methods=['GET'])
 def new_entry():
@@ -81,16 +86,13 @@ def single_entry():
 
 @app.route('/user', methods=['GET'])
 def user():
-
-    #if request.method == 'GET':
     
     entry = int(request.args.get('id'))
     owner = User.query.filter_by(id=entry).first()
-    owner_2 = Entry.query.filter_by(id=entry).first()
-    #owner_2 = owner.blogz
+
     entries = Entry.query.filter_by(owner_id=entry).all()
 
-    return render_template('user.html',entries=entries, owner=owner,entry_name=owner_2.name, entry_content=owner_2.content)
+    return render_template('user.html',entries=entries, owner=owner)
 
 @app.route('/', methods=['POST', 'GET'])
 def entries():
@@ -115,8 +117,6 @@ def register():
         password = request.form['password']
         pass_conf = request.form['pass_conf']
         
-        #TODO --validates user's data
-
         existing_user = User.query.filter_by(username=username).first()
 
         if username == '' or password == '' or pass_conf == '':
@@ -138,7 +138,7 @@ def register():
             return render_template('signup.html')
 
         if not username_error  and not password_error and not existing_user and password == pass_conf:
-            #if password == pass_conf:
+   
             new_user = User(username,password)
             db.session.add(new_user)
             db.session.commit()
@@ -146,17 +146,7 @@ def register():
             flash("logged in")
             return redirect('/new_entry')
 
-        #else:
-            # TODO -- user better response messaging
-            #return "<h1> duplicate </h1>"
-        
     return render_template("signup.html", username_error=username_error, password_error=password_error)
-
-@app.before_request
-def require_login():
-    allowed_routes = ['login', 'signup', 'index','entries']
-    if request.endpoint not in allowed_routes and 'username' not in session:
-        return redirect('/login')
 
 @app.route('/index', methods=['GET'])
 def index():
